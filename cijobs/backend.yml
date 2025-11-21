@@ -1,0 +1,55 @@
+backend-local-db:
+  image: registry.example.com/example/robot:master-latest
+  stage: backend-test
+  services:
+  - name: registry.example.com/example/mongo:develop-latest
+    alias: mongo
+  variables:
+    MONGO_INITDB_ROOT_PASSWORD: "SCRUBBED_PASSWORD"
+    MONGO_INITDB_ROOT_USERNAME: "root"
+    MONGO_INITDB_DATABASE: "example"
+  script:
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://example.com/api/v4/projects/12345678/packages/generic/databases/1/gp.tar.gz" --output gp.tar.gz'
+    - tar xvf gp.tar.gz
+    - mongorestore --uri=mongodb://root:SCRUBBED_PASSWORD@mongo:27017/example?authSource=admin --gzip GP/example
+    - pip3.10 install --upgrade pip
+    - pip3.10 install -U wheel setuptools pytest
+    - echo "machine example.com" > ~/.netrc
+    - echo "login example-ci-token" >> ~/.netrc
+    - echo "password $CI_JOB_TOKEN" >> ~/.netrc
+    - export PATH=$PATH:/home/example/.local/bin
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" https://example.com/api/v4/projects/12345678/packages/generic/constraints/develop/constraints.txt -o constraints.txt'
+    - pip3.10 install -c constraints.txt example-common --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt exampleio --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt exampleapi --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt example_tools --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt example_api --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt email_tools --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt clustereng_tools --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install -c constraints.txt example-platform --index-url https://example.com/api/v4/projects/12345678/packages/pypi/simple
+    - pip3.10 install robotframework-requests
+    - mkdir -p /home/example/var/log
+    - mkdir -p /home/example/var/run/celery
+    - exampleio
+    - platform_exampleapi --version
+    - ls -alh /etc || echo "not allowed but don't fail the pipeline"
+    - cp $exampleconfig /etc/example/example-config.json
+    - chown -R example:example /etc/example
+    - redis-server &
+    - sleep 5
+    - cd /home/example/.local/lib/python3.10/site-packages/clustereng_apps && /home/example/.local/bin/celery -A celery_entry worker --pidfile=/home/example/var/run/celery/%n.pid --hostname beta_worker@%h -Q fast --loglevel=info -Ofair --concurrency=5 --task-events --logfile /home/example/var/log/celery-fast.log &
+    - cd /home/example/.local/lib/python3.10/site-packages/clustereng_apps && /home/example/.local/bin/celery -A celery_entry worker --pidfile=/home/example/var/run/celery/%n.pid --hostname alpha_worker@%h -Q celery --loglevel=info -Ofair --concurrency=15  --task-events --logfile /home/example/var/log/celery-celery.log &
+    - cd /home/example/.local/lib/python3.10/site-packages/clustereng_apps && /home/example/.local/bin/gunicorn --limit-request-line 0 --workers=4 --bind=0.0.0.0:9000 flask_entry:app &
+    - cd /home/example/.local/lib/python3.10/site-packages/example_api_apps && /home/example/.local/bin/gunicorn --limit-request-line 0 --workers=8 --bind=0.0.0.0:8000  --access-logfile='/home/example/var/log/gunicorn-example.log' --log-file='/home/example/var/log/gunicorn-example.log' example_api_apps.main:application &
+    - sleep 15
+    - curl localhost:9000/showActiveTasks
+    - echo "Add your tests after this line"
+
+  # artifacts:
+  #   when: always
+  #   paths:
+  #   expire_in: 1 week
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /backend_test/'
+
