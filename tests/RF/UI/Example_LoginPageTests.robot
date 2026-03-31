@@ -1,7 +1,7 @@
 *** Settings ***
-Resource          ../../../resources/PageObject/Example_Keywords/Example_NetworkPage.robot
-Resource          ../../../resources/PageObject/Example_Keywords/Example_Common.robot
-Resource          ../../../resources/PageObject/Example_Keywords/Example_LoginPage.robot
+Resource          ../../../resources/PageObject/Keywords/Example_NetworkPage.robot
+Resource          ../../../resources/PageObject/Keywords/Example_Common.robot
+Resource          ../../../resources/PageObject/Keywords/Example_LoginPage.robot
 Test Setup        Begin Webtest
 Test Teardown     End Webtest
 Test Timeout      15 minutes

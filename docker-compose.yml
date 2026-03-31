@@ -1,0 +1,47 @@
+version: "3.8"
+
+# Local Selenium Grid for running UI and API tests simultaneously.
+# UI tests target the Selenium Grid; API tests run independently (no browser needed).
+#
+# Usage:
+#   docker-compose up -d
+#   pabot --processes 4 --outputdir results tests/RF/
+#   docker-compose down
+
+services:
+
+  selenium-hub:
+    image: selenium/hub:4.18.1
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    environment:
+      SE_SESSION_QUEUE_CAPACITY: 10
+
+  chrome:
+    image: selenium/node-chrome:4.18.1
+    container_name: selenium-chrome
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub
+      SE_EVENT_BUS_PUBLISH_PORT: 4442
+      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+      SE_NODE_MAX_SESSIONS: 4
+      SE_NODE_MAX_INSTANCES: 4
+
+  firefox:
+    image: selenium/node-firefox:4.18.1
+    container_name: selenium-firefox
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub
+      SE_EVENT_BUS_PUBLISH_PORT: 4442
+      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+      SE_NODE_MAX_SESSIONS: 2
+      SE_NODE_MAX_INSTANCES: 2

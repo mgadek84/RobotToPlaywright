@@ -8,7 +8,7 @@ Library          OperatingSystem
 Library          String
 Library          BuiltIn
 Library          DateTime
-Resource         ../../../config.properties/config.properties.robot
+Resource         ../../../../config.properties/config.properties.robot
 Variables        Example-Config.yaml
 
 *** Variables ***

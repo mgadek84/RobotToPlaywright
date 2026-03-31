@@ -1,0 +1,21 @@
+# Pabot parallel execution configuration.
+# UI and API suites run simultaneously as independent parallel processes.
+# Each suite manages its own setup/teardown — no shared browser sessions.
+#
+# Run:
+#   pabot --argumentfile pabot.yaml --outputdir results tests/RF/
+
+processes: 4
+verbose: true
+outputdir: results
+
+# Suite-level ordering — API tests start immediately (no browser spin-up delay),
+# UI tests follow. Both run in parallel across available processes.
+suitesfrom:
+  - tests/RF/API
+  - tests/RF/UI
+
+# Shared resources locked to prevent race conditions on parallel writes
+pabotlib: true
+pabotlibport: 8270
+pabotlibhost: 127.0.0.1

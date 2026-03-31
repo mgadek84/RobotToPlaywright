@@ -3,10 +3,10 @@ Documentation  Example tests related only to Landing Page
 Library    SeleniumLibrary
 Library    base64
 Library    SikuliLibrary  mode=NEW
-Resource   ../../../config.properties/config.properties.robot
-Variables  ../Example_Locators/Example_LoginPage.py
-Variables  ../Example_Locators/Example_Common.py
-Variables  ../TestData/Example_Testdata.py
+Resource   ../../../../config.properties/config.properties.robot
+Variables  ../../Locators/Example_LoginPage.py
+Variables  ../../Locators/Example_Common.py
+Variables  ../../TestData/Example_Testdata.py
 
 
 *** Variables ***

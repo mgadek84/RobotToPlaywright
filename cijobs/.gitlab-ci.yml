@@ -135,8 +135,8 @@ test-example-api:
   timeout: 120m
   variables:
     ROBOT_THREADS: 4
-    ROBOT_REPORTS_DIR: ${CI_PROJECT_DIR}/results/Example-API-Example
-    ROBOT_TESTS_DIR: ${CI_PROJECT_DIR}/tests/RF/Example-API-Example
+    ROBOT_REPORTS_DIR: ${CI_PROJECT_DIR}/results/API
+    ROBOT_TESTS_DIR: ${CI_PROJECT_DIR}/tests/RF/API
     ROBOT_OPTIONS: "--variable vouch_password:${EXAMPLE_PASSWORD}"
     ROBOT_RETRY: "--listener RetryFailed:5"
     SECURE_FILES_DOWNLOAD_PATH: "."
@@ -149,7 +149,7 @@ test-example-api:
   artifacts:
     when: always
     paths:
-    - $CI_PROJECT_DIR/results/Example-API-Example
+    - $CI_PROJECT_DIR/results/API
     expire_in: 1 week
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /test-example-api/ || $CI_COMMIT_MESSAGE =~ /run-all-tests/ || $CI_COMMIT_MESSAGE =~ /run-all-api-tests/'
@@ -162,8 +162,8 @@ test-example-ui-chrome:
  when: always
  variables:
    ROBOT_THREADS: 4
-   ROBOT_REPORTS_DIR: ${CI_PROJECT_DIR}/results/Example-UI-Chrome
-   ROBOT_TESTS_DIR: ${CI_PROJECT_DIR}/tests/RF/Example-UI
+   ROBOT_REPORTS_DIR: ${CI_PROJECT_DIR}/results/UI-Chrome
+   ROBOT_TESTS_DIR: ${CI_PROJECT_DIR}/tests/RF/UI
    ROBOT_OPTIONS: "--variable Example_PASSWORD:${Example_PASSWORD} --variable Example_TWOFA:${Example_TWOFA} --variable BROWSER:Chrome"
    SECURE_FILES_DOWNLOAD_PATH: "."
  script:
@@ -175,7 +175,7 @@ test-example-ui-chrome:
  artifacts:
    when: always
    paths:
-   - $CI_PROJECT_DIR/results/Example-UI-Chrome
+   - $CI_PROJECT_DIR/results/UI-Chrome
    expire_in: 1 week
  rules:
     - if: '$CI_COMMIT_MESSAGE =~ /test-example-ui-chrome/ || $CI_COMMIT_MESSAGE =~ /run-all-tests/'

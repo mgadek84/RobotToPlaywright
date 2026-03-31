@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation    Example API Test
-Resource         ../../../resources/PageObject/Example_Keywords/Example-Accounts.robot
-Resource         ../../../resources/PageObject/Example_Keywords/Example-Common.robot
+Resource         ../../../resources/PageObject/Keywords/Example-Accounts.robot
+Resource         ../../../resources/PageObject/Keywords/Example-Common.robot
 Resource         ../../../config.properties/config.properties.robot
 Library          SeleniumLibrary
 Test Timeout     60 seconds

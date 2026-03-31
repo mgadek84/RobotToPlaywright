@@ -3,11 +3,11 @@ Documentation   Tests used across Example platform. General tests to enchance fu
 Library         SeleniumLibrary
 Library         SikuliLibrary  mode=NEW
 Library         OperatingSystem
-Resource        ../../../config.properties/config.properties.robot
-Variables       ../Example_Locators/Example_LoginPage.py
-Variables       ../Example_Locators/Example_NetworkPage.py
-Variables       ../Example_Locators/Example_Common.py
-Variables       ../TestData/Example_Testdata.py
+Resource        ../../../../config.properties/config.properties.robot
+Variables       ../../Locators/Example_LoginPage.py
+Variables       ../../Locators/Example_NetworkPage.py
+Variables       ../../Locators/Example_Common.py
+Variables       ../../TestData/Example_Testdata.py
 
 *** Variables ***
 ${EXAMPLE_IMAGE_DIR}    ./resources/PageObject/Example_SikuliX_Images

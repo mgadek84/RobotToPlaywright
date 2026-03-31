@@ -4,9 +4,9 @@ Library          JSONLibrary
 Library          RequestsLibrary
 Library          Collections
 Library          OperatingSystem
-Resource         ../../../config.properties/config.properties.robot
-Resource         ../../../resources/PageObject/Example_Keywords/Example-Common.robot
-Variables        ../../../resources/PageObject/Example_Keywords/Example-Config.yaml
+Resource         ../../../../config.properties/config.properties.robot
+Resource         Example-Common.robot
+Variables        Example-Config.yaml
 
 *** Variables ***
 ${json_variable}                                 jsonplaceholder
