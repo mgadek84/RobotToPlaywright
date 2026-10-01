@@ -33,7 +33,7 @@ Generate Sub ID
     ${sub_id}=    Catenate    xxxxxxxx-${n_sub}-xxxx-xxxx-xxxxxxxxxxxx
     Set Global Variable    ${sub_id}
 
-Example Example Accounts By ID
+Example Accounts By ID
     [Documentation]  Test Case assert 200 status code. Verifis that id is equal to id in response
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ...  Authorization=Bearer ${bearer_token}
@@ -45,14 +45,14 @@ Example Example Accounts By ID
     Dictionary Should Contain Key    ${response_text}    totalRecords
     Should Be Equal    ${response_text['rows'][0]['id']}    ${automated_smoke_test_uuid}
 
-Example Example GET Accounts Unauthorized user
+Example GET Accounts Unauthorized user
     [Documentation]  Assert that response 401
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ${parameters}=  Create Dictionary   page=1  pageSize=1
     ${response}=  Get On Session  ${json_variable}  /api-v1/accounts
     ...  headers=${header}  params=${parameters}  expected_status=401
 
-Example Example Accounts
+Example Accounts
     [Documentation]  Send request without parameters. Loop through all ID. Assert ID is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ...  Authorization=Bearer ${bearer_token}
@@ -67,7 +67,7 @@ Example Example Accounts
         Should Not Be Empty    ${row['id']}    Error: ID value is empty
     END
 
-Example Example Accounts By Name
+Example Accounts By Name
     [Documentation]  Test Case assert 200 status code. Verifis that Name is equal to Name in response
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ...  Authorization=Bearer ${bearer_token}
@@ -78,7 +78,7 @@ Example Example Accounts By Name
     Dictionary Should Contain Key    ${response_text}    totalRecords
     Should Be Equal    ${response_text['rows'][0]['name']}    ${name}
 
-Example Example Accounts By Domain
+Example Accounts By Domain
     [Documentation]  Test Case assert 200 status code. Verifis that domain is equal to website in response
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ...  Authorization=Bearer ${bearer_token}
@@ -90,7 +90,7 @@ Example Example Accounts By Domain
     #TODO As for now returning an empty string in response
 #    Should Be Equal  ${response_text['rows'][0]['website']}  ${website}
 
-Example Example Accounts By emailAddress
+Example Accounts By emailAddress
     [Documentation]  Test Case assert 200 status code. Verifis that email is equal to email in response
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -102,7 +102,7 @@ Example Example Accounts By emailAddress
     #TODO As for now returning an empty string in response
 #    Should Be Equal  ${response_text['rows'][0]['emailAddress']}  ${emailAddress}
 
-Example Example Accounts showDeleted
+Example Accounts showDeleted
     [Documentation]  Set showDeleted as true. Loop vendor name assert 200 and name is not empty
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -117,7 +117,7 @@ Example Example Accounts showDeleted
         Should Not Be Empty    ${row['name']}
     END
 
-Example Example Accounts showDeleted as false
+Example Accounts showDeleted as false
     [Documentation]  Set showDeleted as false. Loop vendor name assert 200 and name is not empty
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -132,7 +132,7 @@ Example Example Accounts showDeleted as false
         Should Not Be Empty    ${row['name']}
     END
 
-Example Example Accounts by x-request-id
+Example Accounts by x-request-id
     [Documentation]  Get /api-v1/accounts. Assert 200. Assert Id is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -147,7 +147,7 @@ Example Example Accounts by x-request-id
         Should Not Be Empty    ${row['id']}
     END
 
-Example Example Accounts by linked as true
+Example Accounts by linked as true
     [Documentation]  Get /api-v1/accounts. Assert 200. Parameter linked. Assert Id is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -162,7 +162,7 @@ Example Example Accounts by linked as true
         Should Not Be Empty    ${row['id']}
     END
 
-Example Example Accounts by linked as false
+Example Accounts by linked as false
     [Documentation]  Get /api-v1/accounts. Assert 200. Parameter linked. Assert Id is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -177,7 +177,7 @@ Example Example Accounts by linked as false
         Should Not Be Empty    ${row['id']}
     END
 
-Example Example Accounts by asc as true
+Example Accounts by asc as true
     [Documentation]  Get /api-v1/accounts. Assert 200. Parameter asc. Assert Id is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -192,7 +192,7 @@ Example Example Accounts by asc as true
         Should Not Be Empty    ${row['id']}
     END
 
-Example Example Accounts by asc as false
+Example Accounts by asc as false
     [Documentation]  Get /api-v1/accounts. Assert 200. Parameter asc. Assert Id is not empty.
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -207,7 +207,7 @@ Example Example Accounts by asc as false
         Should Not Be Empty    ${row['id']}
     END
 
-Example Example Accounts by invalid uuid
+Example Accounts by invalid uuid
     [Documentation]  Get /api-v1/accounts. Assert totalRecords == 0
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -218,7 +218,7 @@ Example Example Accounts by invalid uuid
     Dictionary Should Contain Key    ${response_text}    totalRecords
     Should be Equal as Integers  ${response_text['totalRecords']}  0
 
-Example Example Accounts by invalid name
+Example Accounts by invalid name
     [Documentation]  Get /api-v1/accounts. Assert totalRecords == 0. Assert 200
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -229,7 +229,7 @@ Example Example Accounts by invalid name
     Dictionary Should Contain Key    ${response_text}    totalRecords
     Should be Equal as Integers  ${response_text['totalRecords']}  0
 
-Example Example Accounts by invalid website
+Example Accounts by invalid website
     [Documentation]  Get /api-v1/accounts. Assert totalRecords == 0. Assert 200
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -240,7 +240,7 @@ Example Example Accounts by invalid website
     Dictionary Should Contain Key    ${response_text}    totalRecords
     Should be Equal as Integers  ${response_text['totalRecords']}  0
 
-Example Example Accounts by invalid emailAddress
+Example Accounts by invalid emailAddress
     [Documentation]  Get /api-v1/accounts. Assert totalRecords == 0. Assert 200
     ${header}=  Create Dictionary  Content-Type=application/json
     ...  Authorization=Bearer ${bearer_token}
@@ -264,7 +264,7 @@ Test Accounts Create New Subscriber Post
     ${subscriber}=    Set Variable    ${response.json()["id"]}
     Should be equal  ${subscriber}  ${sub_id}
 
-Example Example POST Accounts Unauthorized user
+Example POST Accounts Unauthorized user
     [Documentation]  POST /api-v1/accounts  Assert 401
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ${json_body}=  Create Dictionary    id=null
@@ -285,7 +285,7 @@ Example Example POST Accounts Unauthorized user
     ${response}=  Post On Session  ${json_variable}  /api-v1/accounts
     ...  headers=${header}  json=${json_body}  expected_status=401
 
-Example Example PUT Accounts Unauthorized user
+Example PUT Accounts Unauthorized user
     [Documentation]  PUT /api-v1/accounts  Assert 401
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ${json_body}=  Create Dictionary  id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -306,14 +306,14 @@ Example Example PUT Accounts Unauthorized user
     ${response}=  Put On Session  ${json_variable}  /api-v1/accounts
     ...  headers=${header}  json=${json_body}  expected_status=401
 
-Example Example DELETE Accounts Unauthorized user
+Example DELETE Accounts Unauthorized user
     [Documentation]  DELETE /api-v1/accounts  Assert 401
     ${header}=  Create Dictionary  Content-Type=application/json  x-request-id=${x-request-id}
     ${parameters}=  Create Dictionary  id=${uuid}
     ${response}=  Delete On Session  ${json_variable}  /api-v1/accounts
     ...  headers=${header}  params=${parameters}  expected_status=401
 
-Example Example POST 200 Accounts Smoke
+Example POST 200 Accounts Smoke
     [Documentation]  POST /api-v1/accounts. Assert 200.
     ${random_number}=    Generate Random Number
     ${Generate Random Number 1000-9999}=  Generate Random Number 1000-9999
@@ -338,7 +338,7 @@ Example Example POST 200 Accounts Smoke
     ${account_id}=    Set Variable    ${response_body['id']}
     RETURN        ${account_id}
 
-Example Example DELETE 200 Accounts Smoke
+Example DELETE 200 Accounts Smoke
 # Parameters taken from Example Example Example Example POST 200 Accounts Smoke
     [Documentation]  DELETE /api-v1/accounts. Assert 200
     [Arguments]    ${account_id}

@@ -36,7 +36,7 @@ Create Unauthorized Session by URL
     ${header}=    Create Dictionary    Content-Type=application/json
     Create Session    ${json_variable}    ${URL}    headers=${header}    verify=True
 
-Example Example Get Bearer token
+Example Get Bearer token
     [Documentation]  Request Example bearer token from /login/local/auth
     Set Log Level    NONE
     ${header}=    Create Dictionary    Content-Type=application/json    x-request-id=${x-request-id}

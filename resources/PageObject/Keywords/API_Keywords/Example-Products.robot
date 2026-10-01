@@ -364,3 +364,10 @@ Example DELETE 400 Products x-originator-false Smoke
     ${response}=  Delete On Session  ${json_variable}  /api-v1/products
     ...  headers=${header}  params=${parameters}  expected_status=400
 
+
+Get Products Request
+    [Arguments]    ${token}    ${params}=&{EMPTY}
+    ${headers}=    Create Dictionary    Authorization=Bearer ${token}    Content-Type=application/json
+    Create Session    products    ${EXAMPLE_URL}    headers=${headers}    verify=False
+    ${response}=    GET On Session    products    /api-v1/products    params=${params}    expected_status=any
+    [Return]    ${response}

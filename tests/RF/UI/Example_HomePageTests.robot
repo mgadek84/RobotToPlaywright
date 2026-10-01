@@ -3,6 +3,7 @@ Documentation     Tests covering UI functionality on a Home Page of Example Mark
 Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_NetworkPage.robot
 Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_Common.robot
 Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_HomePage.robot
+Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_LoginPage.robot
 Test Setup        Begin Webtest
 Test Teardown     End Webtest
 Test Timeout      15 minutes
