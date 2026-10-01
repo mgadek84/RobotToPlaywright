@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation     Tests covering UI functionality on a Home Page of Example Marketplace application.
-Resource          ../../../resources/PageObject/Keywords/Example_NetworkPage.robot
-Resource          ../../../resources/PageObject/Keywords/Example_Common.robot
-Resource          ../../../resources/PageObject/Keywords/Example_HomePage.robot
+Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_NetworkPage.robot
+Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_Common.robot
+Resource          ../../../resources/PageObject/Keywords/UI_Keywords/Example_HomePage.robot
 Test Setup        Begin Webtest
 Test Teardown     End Webtest
 Test Timeout      15 minutes
