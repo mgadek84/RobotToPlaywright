@@ -6,7 +6,7 @@ Library          Collections
 Library          OperatingSystem
 Resource         ../../../../config.properties/config.properties.robot
 Resource         Example-Common.robot
-Variables        Example-Config.yaml
+Variables        ../../../../cijobs/Example-Config.yaml
 
 *** Variables ***
 ${json_variable}                                 jsonplaceholder

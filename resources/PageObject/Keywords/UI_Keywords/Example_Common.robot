@@ -1,12 +1,11 @@
 *** Settings ***
 Documentation   Tests used across Example platform. General tests to enchance functionality
 Library         SeleniumLibrary
-Library         SikuliLibrary  mode=NEW
 Library         OperatingSystem
 Resource        ../../../../config.properties/config.properties.robot
-Variables       ../../Locators/Example_LoginPage.py
-Variables       ../../Locators/Example_NetworkPage.py
-Variables       ../../Locators/Example_Common.py
+Variables       ../../UI_Locators/Example_LoginPage.py
+Variables       ../../UI_Locators/Example_NetworkPage.py
+Variables       ../../UI_Locators/Example_Common.py
 Variables       ../../TestData/Example_Testdata.py
 
 *** Variables ***
@@ -30,11 +29,11 @@ SikuliX Test Close
     # CleanDirectory Sikuli
 
 SikuliX Stop Remote Server
-    [documentation]  TODO
-    SikuliLibrary.Stop Remote Server
+    [documentation]  Stub — SikuliLibrary removed
+    Log    SikuliLibrary not available; skipping stop remote server.
 
 Add Needed Image Path
-    SikuliLibrary.Add Image Path    ${EXAMPLE_IMAGE_DIR}
+    Log    SikuliLibrary not available; skipping add image path.
 
 CleanDirectory Sikuli
     Empty Directory    sikuli_captured/
