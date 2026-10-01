@@ -3,6 +3,7 @@ results/
 output.xml
 log.html
 report.html
+selenium-screenshot-*.png
 *.xml
 
 # Pabot parallel execution
@@ -10,6 +11,8 @@ pabot_results/
 .pabot_lock
 
 # Python
+.venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo

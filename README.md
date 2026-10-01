@@ -1,125 +1,157 @@
 # Robot-UI-API-Framework
 
-A keyword-driven test automation framework built with Robot Framework, covering both UI (Selenium) and REST API testing in a single unified suite. Designed for maintainability and scale, with full GitLab CI integration and a clean Page Object structure.
+A keyword-driven Robot Framework suite that tests two public demo services:
+
+- **API**: [reqres.in](https://reqres.in) with RequestsLibrary
+- **UI**: [saucedemo.com](https://www.saucedemo.com) with SeleniumLibrary and Chrome
+
+It runs as-is: no accounts, secrets, or `.env` file needed. The suite is organized in layers (tests, keywords, locators, test data, config) so it can be migrated to another tool, for example Java + Playwright, one layer at a time.
 
 ---
 
-## What This Framework Does
+## What the suite covers
 
-- UI automation via Selenium WebDriver using a Page Object Model structure
-- REST API testing with keyword-driven request/response validation
-- CI/CD integration via GitLab CI — runs on every merge request
-- Reusable keyword library organized by domain in `resources/PageObject/`
-- Structured test suites under `tests/RF/` separated by feature area
+### API: reqres.in (13 tests)
+
+| Suite | Test | Checks |
+|---|---|---|
+| `Reqres_Auth` | Login With Valid Credentials Returns Token | `POST /login` returns 200 and a token |
+| | Login Without Password Is Rejected | 400, `"Missing password"` |
+| | Login With Unknown User Is Rejected | 400, `"user not found"` |
+| | Request With Invalid API Key Is Rejected | 403 for a wrong `x-api-key` |
+| `Reqres_Users` | List Users Returns First Page | page/per_page/total/total_pages, user IDs 1-6 |
+| | List Users Returns Second Page | user IDs 7-12 |
+| | List Users Beyond Last Page Returns No Users | page 3 is empty |
+| | Get Single User Returns User Details | `GET /users/2` fields |
+| | Get Unknown User Returns 404 | `GET /users/23` returns 404 with an empty body |
+| | Create User Returns 201 With Id | `POST /users` echoes data, returns `id` and `createdAt` |
+| | Update User Returns Updated Fields | `PUT /users/2` echoes data, returns `updatedAt` |
+| | Delete User Returns 204 With Empty Body | `DELETE /users/2` |
+| | Endpoints Return Expected Status Codes | data-driven table of method, path, and expected status |
+
+### UI: saucedemo.com (8 tests)
+
+| Suite | Test | Checks |
+|---|---|---|
+| `SauceDemo_Login` | Valid Login Opens Products Page | `standard_user` lands on the inventory page |
+| | Locked Out User Cannot Log In | locked-out error message |
+| | Invalid Credentials Are Rejected | data-driven: wrong password, unknown user, empty username, empty password |
+| | Logout Returns To Login Page | logout via the side menu; inventory is no longer reachable |
+| `SauceDemo_Inventory` | Product List Shows All Products | 6 products, expected names, default sort |
+| | Products Can Be Sorted | data-driven: name A-Z / Z-A, price low-high / high-low |
+| | Adding Products Updates Cart Badge | badge shows 1, then 2 |
+| | Removing Product Updates Cart Badge | badge goes 2 to 1 and then disappears |
+
+Tags: `api`, `ui`, `smoke`, `negative`, `auth`, `users`, `login`, `inventory`, `cart`, `status-codes`.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-Robot-UI-API-Framework/
-├── cijobs/                          # GitLab CI job definitions
-│   ├── .gitlab-ci.yml
-│   ├── backend.yml
-│   └── pipeline-menu.yml
+.
+├── config.properties/
+│   └── config.properties.robot      # Default configuration (URLs, API key, credentials, HEADLESS)
 ├── resources/
 │   └── PageObject/
 │       ├── Keywords/
-│       │   ├── API_Keywords/        # Reusable API request keywords per domain
-│       │   └── UI_Keywords/         # Reusable UI interaction keywords per page
-│       └── UI_Locators/             # Element locators (XPath / CSS) per page
+│       │   ├── API_Keywords/        # Reqres_Common, Reqres_Auth, Reqres_Users
+│       │   └── UI_Keywords/         # SauceDemo_Common, _LoginPage, _InventoryPage, _Header
+│       ├── UI_Locators/             # One Python variable file of locators per page
+│       └── TestData/                # Reqres_TestData.py, SauceDemo_TestData.py
 ├── tests/
 │   └── RF/
-│       ├── API/                     # API test suites
-│       └── UI/                      # UI test suites
-├── TestData/                        # Shared test data variables
-├── conftest/                        # Custom Robot Framework listeners and hooks
-├── results/                         # Test output and HTML reports (git-ignored)
-├── .env.example                     # Required environment variable reference
-├── requirements.txt                 # Python dependency list
-└── .gitlab-ci.yml                   # Pipeline definition
+│       ├── API/                     # Reqres_Auth.robot, Reqres_Users.robot
+│       └── UI/                      # SauceDemo_Login.robot, SauceDemo_Inventory.robot
+├── .env.example                     # Optional environment overrides
+└── requirements.txt
 ```
 
----
+Each layer has a single job:
 
-## Tech Stack
-
-| Layer | Tool |
-|---|---|
-| Framework | Robot Framework |
-| UI Automation | Selenium WebDriver |
-| API Testing | RequestsLibrary |
-| CI/CD | GitLab CI |
-| Reporting | Robot Framework built-in HTML reports |
+- **Tests** (`tests/RF/`) only call keywords and pass in test data.
+- **Keywords** (`resources/PageObject/Keywords/`) hold all requests, browser actions, and assertions. There is one file per API area or page.
+- **Locators** (`UI_Locators/`) are the only place selectors live. They use `data-test` attributes.
+- **Test data** (`TestData/`) holds payloads and expected values.
+- **Config** (`config.properties/config.properties.robot`) holds environment-specific settings. Each setting can be overridden.
 
 ---
 
-## Architecture Decisions
+## Setup
 
-**Keyword-driven design** — test logic is expressed in human-readable keywords defined in `resources/PageObject/`. This separates implementation from test intent and makes suites readable by non-engineers.
+You need Python 3.8 or newer (tested with 3.12, 3.13, and 3.14) and Google Chrome. The matching ChromeDriver is downloaded automatically by Selenium Manager the first time the UI tests run, so that first run needs internet access.
 
-**Unified UI and API coverage** — both layers share the same framework, variable files, and CI pipeline. This avoids tool sprawl and keeps the test infrastructure simple to maintain.
+### Windows (PowerShell)
 
-**Page Object Model** — each UI page or API domain has its own resource file. Locators and request details are defined once and reused across all test suites.
-
-**Release-blocking CI** — the `.gitlab-ci.yml` pipeline runs the full suite on every merge request. Failures block deployment, making quality a hard gate rather than a report.
-
----
-
-## How to Run
-
-### Prerequisites
-
-```bash
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### Environment setup
+If PowerShell blocks `Activate.ps1`, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or skip activation and call `.\.venv\Scripts\python -m robot ...` instead of `robot ...`.
 
-Copy `.env.example` to `.env` and fill in the required values before running locally.
-
-### Run all tests
+### macOS / Linux
 
 ```bash
-robot tests/RF/
-```
-
-### Run a specific suite
-
-```bash
-robot tests/RF/UI/
-robot tests/RF/API/
-```
-
-### Run with a specific tag
-
-```bash
-robot --include smoke tests/RF/
-```
-
-### Output and reports
-
-Robot Framework generates `output.xml`, `log.html`, and `report.html` in the `results/` directory after each run.
-
-```bash
-robot --outputdir results/ tests/RF/
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ---
 
-## CI/CD Pipeline
+## Running the tests
 
-The `.gitlab-ci.yml` defines the full pipeline:
+Run these from the repository root. The same commands work in PowerShell, bash, and zsh.
 
-- Triggered on every merge request and push to main
-- Runs the complete test suite in a containerized environment
-- Publishes Robot Framework HTML report as a pipeline artifact
-- Fails the pipeline on any test failure, blocking merge
+| What | Command |
+|---|---|
+| Everything | `robot tests/RF/` |
+| API only | `robot tests/RF/API/` |
+| UI only | `robot tests/RF/UI/` |
+| Everything, headless | `robot -v HEADLESS:true tests/RF/` |
+| Smoke tests only | `robot --include smoke tests/RF/` |
+| UI in Microsoft Edge | `robot -v UI_BROWSER:edge tests/RF/UI/` |
+
+By default the UI tests open a visible Chrome window. `-v HEADLESS:true` runs the browser without a window. You can also set it for the whole PowerShell session with `$env:HEADLESS = "true"`, and undo that with `Remove-Item Env:HEADLESS`.
+
+Robot Framework writes `output.xml`, `log.html` and `report.html` to the current folder. To keep them in `results/`, add `--outputdir results`, for example `robot --outputdir results tests/RF/`. Screenshots of failed UI steps are embedded in `log.html`.
 
 ---
 
-## Author
+## Configuration
 
-**Yuriy Safronnynov** — Senior SDET / QA Automation Architect
+Every value in `config.properties/config.properties.robot` has a working default. To override one, either pass it on the command line (`robot -v NAME:value ...`) or set an environment variable with the same name. The command line takes precedence.
 
-https://www.linkedin.com/in/yuriy-safronnynov/ | https://github.com/Safron09
+| Variable | Default | Purpose |
+|---|---|---|
+| `REQRES_BASE_URL` | `https://reqres.in/api` | API base URL |
+| `REQRES_API_KEY` | `reqres-free-v1` | Sent as the `x-api-key` header |
+| `REQRES_TIMEOUT` | `30` | Request timeout in seconds |
+| `SAUCEDEMO_URL` | `https://www.saucedemo.com/` | UI start page |
+| `SAUCE_USER` / `SAUCE_PASSWORD` | `standard_user` / `secret_sauce` | Public demo credentials |
+| `UI_BROWSER` | `chrome` | `chrome` or `edge` |
+| `UI_TIMEOUT` | `10s` | SeleniumLibrary wait timeout |
+| `HEADLESS` | `false` | `true` runs the browser without a window |
+
+Robot Framework does not read `.env` files. `.env.example` lists the same variables for tools that load env files (for example IDE run configurations). `.env` is git-ignored.
+
+---
+
+## Notes on the target services
+
+- reqres.in is a mock API. Create, update, and delete return realistic responses but don't persist anything. Its write endpoints are rate-limited to about 20 requests per minute per IP, and one full run uses only a handful of them. GET, PUT, and DELETE requests are retried automatically on 429, 502, 503, and 504 responses. POST requests are never retried.
+- saucedemo.com is a static demo shop. Each UI test starts a fresh browser, so cart state never leaks between tests. Chrome's password manager and data-breach warning are turned off because the public demo password would otherwise trigger a pop-up.
+
+---
+
+## Other folders
+
+`cijobs/` (GitLab CI templates), `docker-compose.yml`, `pabot.yaml`, `conftest/RetryListener.py`, and `resources/Libraries/CustomKeywords.py` come from the original framework. The suites above don't use them.
+
+---
+
+## Credits
+
+Original framework structure by **Yuriy Safronnynov**: https://www.linkedin.com/in/yuriy-safronnynov/ | https://github.com/Safron09
