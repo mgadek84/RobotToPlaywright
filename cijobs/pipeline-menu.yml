@@ -1,0 +1,16 @@
+variables:
+  CI_COMMIT_MESSAGE:
+    value: "false"
+    options:
+      - "false"
+      - "test-api"
+      - "test-ui-chrome"
+    description: "QA ROBOT TEST GROUPS TO CHOOSE FROM"
+  BUILD_CONTAINER:
+    value: "false"
+    options:
+      - "false"
+      - "robot"
+      - "upstream-robot-base"
+    description: "Choose a container to build"
+

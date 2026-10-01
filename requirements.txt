@@ -1,0 +1,9 @@
+robotframework==6.1.1
+robotframework-seleniumlibrary==6.3.0
+robotframework-requests==0.9.7
+robotframework-jsonlibrary==0.5
+robotframework-pabot==2.18.0
+robotframework-sikulilibrary==2.0.3
+selenium==4.18.1
+requests==2.31.0
+PyYAML==6.0.1
